@@ -2,6 +2,127 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <title>マイフォント・メモ帳（サイズ連動版）</title>
+    <style>
+        /* --- 自作フォントの定義 --- */
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('Latla-Regular.ttf') format('truetype');
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* --- メモ帳の基本スタイル --- */
+        #notepad {
+            flex-grow: 1;
+            width: 100%;
+            padding: 20px;
+            line-height: 1.4;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            resize: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: font-size 0.2s; /* 切り替えをスムーズに */
+        }
+
+        /* --- 【重要】自作フォント適用時のスタイル --- */
+        .custom-mode {
+            font-family: 'MyCustomFont', sans-serif !important;
+            font-size: xxx-large !important;
+        }
+
+        /* --- 【重要】標準フォント適用時のスタイル --- */
+        .standard-mode {
+            font-family: sans-serif !important;
+            font-size: large !important;
+        }
+
+        #toggle-font {
+            padding: 8px 16px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 style="font-size: 1rem;">メモ帳</h1>
+        <button id="toggle-font">標準フォントに切り替え</button>
+    </div>
+    
+    <textarea id="notepad" class="custom-mode" placeholder="ここに文字を入力してください..."></textarea>
+
+    <script>
+        const notepad = document.getElementById('notepad');
+        const fontBtn = document.getElementById('toggle-font');
+
+        // --- 1. テキスト内容の保存・復元 ---
+        notepad.value = localStorage.getItem('myNote') || '';
+        notepad.addEventListener('input', () => {
+            localStorage.setItem('myNote', notepad.value);
+        });
+
+        // --- 2. フォント設定の保存・復元 ---
+        const savedFontMode = localStorage.getItem('fontMode'); 
+        if (savedFontMode === 'standard') {
+            setStandardMode();
+        } else {
+            setCustomMode();
+        }
+
+        // --- 3. 切り替えボタンの処理 ---
+        fontBtn.addEventListener('click', () => {
+            if (notepad.classList.contains('custom-mode')) {
+                setStandardMode();
+            } else {
+                setCustomMode();
+            }
+        });
+
+        // 自作フォントモードにする関数
+        function setCustomMode() {
+            notepad.classList.remove('standard-mode');
+            notepad.classList.add('custom-mode');
+            fontBtn.textContent = '標準フォントに切り替え';
+            localStorage.setItem('fontMode', 'custom');
+        }
+
+        // 標準フォントモードにする関数
+        function setStandardMode() {
+            notepad.classList.remove('custom-mode');
+            notepad.classList.add('standard-mode');
+            fontBtn.textContent = '自作フォントに切り替え';
+            localStorage.setItem('fontMode', 'standard');
+        }
+    </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
     <title>マイフォント・メモ帳（切替機能付き）</title>
     <style>
         /* --- 自作フォントの定義 --- */
